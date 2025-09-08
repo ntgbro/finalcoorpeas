@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
-import { theme } from '../../../config/theme';
-import type { Product, ServiceKey } from '../../../types';
-import ProductCard from './ProductCard';
-import { getProductsByService } from '../../../firebase/mockApi';
+import { theme } from '../../config/theme';
+import type { Product, ServiceKey } from '../../types';
+import ProductCard from '../layout/ProductCard';
+import { getProductsByService } from '../../firebase/mockApi';
 
 type Props = {
   service: ServiceKey;

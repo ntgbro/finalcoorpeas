@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { theme } from '../../config/theme';
+import { useCartTotalQuantity } from '../../store/cartStore';
+import Badge from '../common/Badge';
 
 type TabKey = 'Home' | 'Cart' | 'Orders' | 'Settings';
 
@@ -24,6 +26,7 @@ const ICONS: Record<TabKey, string> = {
 };
 
 export default function BottomNavBar({ active, onPress }: Props) {
+  const cartCount = useCartTotalQuantity();
   return (
     <View style={styles.bar}>
       {(Object.keys(LABELS) as TabKey[]).map((key) => {
@@ -36,7 +39,14 @@ export default function BottomNavBar({ active, onPress }: Props) {
             accessibilityRole="button"
             accessibilityLabel={LABELS[key]}
           >
-            <Text style={[styles.icon, focused && styles.focused]}>{ICONS[key]}</Text>
+            <View>
+              <Text style={[styles.icon, focused && styles.focused]}>{ICONS[key]}</Text>
+              {key === 'Cart' && (
+                <View style={styles.badgeWrap}>
+                  <Badge value={cartCount} />
+                </View>
+              )}
+            </View>
             <Text style={[styles.label, focused && styles.focused]}>{LABELS[key]}</Text>
           </TouchableOpacity>
         );
@@ -59,6 +69,11 @@ const styles = StyleSheet.create({
   icon: { fontSize: 18, color: theme.colors.textMuted },
   label: { fontSize: 12, color: theme.colors.textMuted },
   focused: { color: theme.colors.primary },
+  badgeWrap: {
+    position: 'absolute',
+    top: -4,
+    right: -12,
+  },
 });
 
 

@@ -10,9 +10,10 @@ export function seedProducts(products: Product[]) {
 }
 
 export async function listProductsByService(service: ServiceKey, opts: ProductQueryOptions = {}): Promise<Product[]> {
-  const { vegOnly, search, limit = 20, offset = 0 } = opts;
+  const { vegOnly, vegFlag, search, limit = 20, offset = 0 } = opts;
   let items = PRODUCTS.filter(p => p.service === service && (p.isAvailable ?? true));
-  if (vegOnly) items = items.filter(p => p.vegFlag === 'VEG');
+  if (vegFlag) items = items.filter(p => p.vegFlag === vegFlag);
+  else if (vegOnly) items = items.filter(p => p.vegFlag === 'VEG');
   if (search && search.trim().length > 0) {
     const q = normalize(search);
     items = items.filter(p => p.searchTokens?.some(t => t.includes(q)));

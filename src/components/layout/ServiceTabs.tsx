@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { theme } from '../../../config/theme';
+import { theme } from '../../config/theme';
 
 export type ServiceKey = 'FRESH_SERVE' | 'FMCG' | 'GIFTING' | 'SUPPLIES' | 'LIVE_CHEF';
 

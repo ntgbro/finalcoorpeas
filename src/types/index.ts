@@ -52,7 +52,8 @@ export interface Product {
 }
 
 export interface ProductQueryOptions {
-  vegOnly?: boolean;
+  vegOnly?: boolean; // legacy flag
+  vegFlag?: VegFlag; // preferred: 'VEG' | 'NON_VEG'
   search?: string;
   limit?: number;
   offset?: number;
@@ -76,5 +77,104 @@ export interface Chef {
   isAvailable?: boolean;
   createdAt?: number;
   updatedAt?: number;
+}
+
+// Order Management Types
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED';
+
+export interface OrderItem {
+  productId: string;
+  name: string;
+  price: number; // snapshot at time of order
+  quantity: number;
+  vegFlag?: VegFlag;
+}
+
+export interface Order {
+  id: string;
+  orderNumber: string;
+  items: OrderItem[];
+  subtotal: number;
+  tax?: number;
+  total: number;
+  status: OrderStatus;
+  createdAt: number;
+  updatedAt: number;
+  estimatedDelivery?: number; // timestamp
+  notes?: string;
+  deliveryAddress?: DeliveryAddress;
+}
+
+// Payment Types
+export type PaymentMethod = 'UPI' | 'CARD' | 'NET_BANKING' | 'WALLET';
+
+export type PaymentStatus = 'PENDING' | 'PROCESSING' | 'SUCCESS' | 'FAILED' | 'CANCELLED';
+
+export interface PaymentDetails {
+  id: string;
+  orderId: string;
+  amount: number;
+  method: PaymentMethod;
+  status: PaymentStatus;
+  upiId?: string;
+  qrCode?: string;
+  transactionId?: string;
+  screenshotTaken?: boolean;
+  transactionIdCopied?: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface UPIDetails {
+  upiId: string;
+  qrCode: string;
+  merchantName: string;
+  merchantId: string;
+}
+
+// Promo Code Types
+export interface PromoCode {
+  code: string;
+  description: string;
+  discountType: 'PERCENTAGE' | 'FIXED';
+  discountValue: number;
+  minOrderAmount?: number;
+  maxDiscount?: number;
+  isActive: boolean;
+  validUntil?: number;
+}
+
+export interface AppliedPromo {
+  code: string;
+  discountAmount: number;
+  finalAmount: number;
+}
+
+// Address Types
+export type AddressType = 'HOME' | 'OFFICE' | 'OTHER';
+
+export interface Address {
+  id: string;
+  userId: string;
+  type: AddressType;
+  label: string;
+  fullName: string;
+  phoneNumber: string;
+  addressLine1: string;
+  addressLine2?: string;
+  landmark?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  isDefault: boolean;
+  isActive: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface DeliveryAddress {
+  addressId: string;
+  address: Address;
+  deliveryInstructions?: string;
 }
 

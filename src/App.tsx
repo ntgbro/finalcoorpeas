@@ -5,20 +5,29 @@ import SplashScreen from './features/splash/SplashScreen';
 import AppNavigator from './navigation/AppNavigator';
 import { seedAll } from './firebase/seed';
 
+// A mock function to simulate async tasks like loading auth state, data, etc.
+const initializeApp = async () => {
+  // In a real app, you might check for an auth token, load settings, etc.
+  // The seedAll() is for development and should be conditional or removed for production.
+  if (__DEV__) {
+    await seedAll();
+  }
+  // Simulate a minimum splash time for branding, but let it hide once ready.
+  await new Promise(resolve => setTimeout(resolve, 2000));
+};
+
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
-  const [showSplash, setShowSplash] = useState(true);
+  const [isAppReady, setAppReady] = useState(false);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => setShowSplash(false), 4000);
-    seedAll();
-    return () => clearTimeout(timeoutId);
+    initializeApp().then(() => setAppReady(true));
   }, []);
 
   return (
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      {showSplash ? <SplashScreen /> : <AppNavigator />}
+      {isAppReady ? <AppNavigator /> : <SplashScreen />}
     </SafeAreaProvider>
   );
 }

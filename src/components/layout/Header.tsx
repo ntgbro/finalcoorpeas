@@ -8,16 +8,16 @@ type Props = {
   onNotifications?: () => void;
   onLocation?: () => void;
   onSearch?: (q: string) => void;
-  onVegToggle?: (isVeg: boolean) => void;
+  onVegModeChange?: (mode: 'VEG' | 'NON_VEG' | 'ALL') => void;
 };
 
-export default function Header({ onProfile, onNotifications, onLocation, onSearch, onVegToggle }: Props) {
+export default function Header({ onProfile, onNotifications, onLocation, onSearch, onVegModeChange }: Props) {
   const [query, setQuery] = useState('');
-  const [isVeg, setIsVeg] = useState(true);
+  const [vegMode, setVegMode] = useState<'VEG' | 'NON_VEG' | 'ALL'>('ALL');
 
-  function toggleVeg(value: boolean) {
-    setIsVeg(value);
-    onVegToggle?.(value);
+  function setMode(mode: 'VEG' | 'NON_VEG' | 'ALL') {
+    setVegMode(mode);
+    onVegModeChange?.(mode);
   }
 
   return (
@@ -46,18 +46,15 @@ export default function Header({ onProfile, onNotifications, onLocation, onSearc
           />
         </View>
 
-        <View style={styles.segmentedWrap}>
-          <Text
-            onPress={() => toggleVeg(true)}
-            style={[styles.segment, styles.segmentLeft, isVeg && styles.segmentActive]}
-          >
+        <View style={styles.segmentedWrap3}>
+          <Text onPress={() => setMode('VEG')} style={[styles.segment3, vegMode === 'VEG' && styles.segmentActive]}>
             Veg
           </Text>
-          <Text
-            onPress={() => toggleVeg(false)}
-            style={[styles.segment, styles.segmentRight, !isVeg && styles.segmentActive]}
-          >
+          <Text onPress={() => setMode('NON_VEG')} style={[styles.segment3, vegMode === 'NON_VEG' && styles.segmentActive]}>
             Non-Veg
+          </Text>
+          <Text onPress={() => setMode('ALL')} style={[styles.segment3, vegMode === 'ALL' && styles.segmentActive]}>
+            All
           </Text>
         </View>
       </View>
@@ -119,12 +116,29 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
+  segmentedWrap3: {
+    marginLeft: 10,
+    flexDirection: 'row',
+    borderRadius: 999,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
   segment: {
     paddingHorizontal: 12,
     paddingVertical: 8,
     backgroundColor: '#EFF3FF',
     color: theme.colors.text,
     fontWeight: '700',
+  },
+  segment3: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    backgroundColor: '#EFF3FF',
+    color: theme.colors.text,
+    fontWeight: '700',
+    borderRightWidth: 1,
+    borderRightColor: theme.colors.border,
   },
   segmentLeft: {},
   segmentRight: { borderLeftWidth: 1, borderLeftColor: theme.colors.border },
